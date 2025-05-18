@@ -1,0 +1,307 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+:root {
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: theme('colors.gray.900');
+  color: theme('colors.gray.100');
+  transition: background-color 200ms ease-in-out;
+}
+
+.dark body {
+  background-color: theme('colors.gray.900');
+}
+
+.mindmap-container {
+  width: 100%;
+  height: 100%;
+  background-color: theme('colors.gray.900');
+}
+
+.mindmap-node {
+  padding: theme('spacing.4') theme('spacing.3');
+  box-shadow: 0 4px 16px 0 rgba(96, 165, 250, 0.15);
+  border-radius: theme('borderRadius.xl');
+  background: linear-gradient(135deg, #e0e7ff, #bae6fd);
+  border: 2px solid #60a5fa;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+  backdrop-filter: blur(4px);
+  position: relative;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.mindmap-node::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent, #a5b4fc33, transparent);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.mindmap-node:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.18);
+  border-color: #3b82f6;
+}
+
+.mindmap-node:hover::before {
+  opacity: 1;
+}
+
+.mindmap-node-selected {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px #6366f133, 0 8px 24px 0 rgba(59, 130, 246, 0.18);
+  background: linear-gradient(135deg, #dbeafe, #a5b4fc);
+}
+
+.mindmap-node-editing {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 2px #22d3ee33, 0 8px 24px 0 rgba(16, 185, 129, 0.12);
+  background: linear-gradient(135deg, #f0fdfa, #bae6fd);
+}
+
+.mindmap-node [contenteditable] {
+  outline: none;
+  min-height: 24px;
+  padding: theme('spacing.1.5');
+  border-radius: theme('borderRadius.md');
+  transition: all 200ms ease;
+  color: #1e293b;
+  background: transparent;
+}
+
+.mindmap-node [contenteditable]:focus {
+  background-color: #e0f2fe;
+  box-shadow: inset 0 2px 4px 0 #bae6fd99;
+}
+
+.mindmap-node [contenteditable]:empty:before {
+  content: attr(data-placeholder);
+  color: #64748b;
+  font-style: italic;
+}
+
+@keyframes mindmap-handle-pulse {
+  0% { box-shadow: 0 0 24px 8px #3b82f6cc, 0 0 0 0 #fff, 0 2px 16px #60a5fa99; }
+  50% { box-shadow: 0 0 36px 16px #60a5faee, 0 0 0 8px #fff8, 0 2px 24px #3b82f6cc; }
+  100% { box-shadow: 0 0 24px 8px #3b82f6cc, 0 0 0 0 #fff, 0 2px 16px #60a5fa99; }
+}
+
+.mindmap-handle {
+  width: 28px !important;
+  height: 28px !important;
+  background: radial-gradient(circle, #2563eb 70%, #60a5fa 100%);
+  border: 4px solid #fff;
+  border-radius: 50%;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 24px 8px #3b82f6cc, 0 2px 16px #60a5fa99;
+  z-index: 30;
+  opacity: 1;
+  display: block;
+  animation: mindmap-handle-pulse 1.2s infinite;
+  pointer-events: auto;
+  cursor: crosshair;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.mindmap-handle:hover {
+  background: radial-gradient(circle, #1e40af 70%, #2563eb 100%);
+  border-color: #fff;
+  transform: translateX(-50%) scale(1.4);
+  box-shadow: 0 0 48px 16px #2563ebee, 0 0 0 12px #fff8, 0 2px 32px #60a5faee;
+}
+
+.mindmap-node-tools {
+  position: absolute;
+  top: theme('spacing.2');
+  right: theme('spacing.2');
+  display: flex;
+  gap: theme('spacing.1');
+  opacity: 0;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+  padding: theme('spacing.1');
+  border-radius: theme('borderRadius.lg');
+  background: linear-gradient(135deg, #e0e7ffcc, #bae6fdcc);
+  border: 1px solid #60a5fa44;
+  box-shadow: 0 4px 12px -1px #60a5fa22;
+}
+
+.mindmap-node:hover .mindmap-node-tools {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mindmap-node-tool-button {
+  padding: theme('spacing.1.5');
+  color: #2563eb;
+  border-radius: theme('borderRadius.md');
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #e0e7ff, #bae6fd);
+  border: 1px solid #60a5fa33;
+}
+
+.mindmap-node-tool-button:hover {
+  background: linear-gradient(135deg, #bae6fd, #a5b4fc);
+  color: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px #60a5fa22;
+}
+
+.mindmap-node-tool-button:hover.hover\:text-red-400:hover {
+  color: #ef4444;
+  background: linear-gradient(135deg, #fee2e2, #fca5a5);
+  border-color: #ef444433;
+}
+
+.mindmap-node-tool-button:hover.hover\:text-green-400:hover {
+  color: #22c55e;
+  background: linear-gradient(135deg, #bbf7d0, #6ee7b7);
+  border-color: #22c55e33;
+}
+
+/* React Flow custom styles */
+.react-flow__attribution {
+  display: none;
+}
+
+.react-flow__controls {
+  background: theme('colors.gray.800');
+  border: 1px solid theme('colors.gray.700');
+  border-radius: theme('borderRadius.lg');
+  padding: theme('spacing.1');
+  box-shadow: theme('boxShadow.lg');
+  backdrop-filter: blur(8px);
+}
+
+.react-flow__controls-button {
+  background: theme('colors.gray.700');
+  border: none;
+  border-radius: theme('borderRadius.md');
+  color: theme('colors.gray.300');
+  padding: theme('spacing.2');
+  margin: theme('spacing.1');
+  transition: all 200ms ease-in-out;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-flow__controls-button:hover {
+  background: theme('colors.gray.600');
+  color: theme('colors.gray.100');
+  transform: scale(1.05);
+}
+
+.react-flow__controls-button:active {
+  transform: scale(0.95);
+}
+
+.react-flow__minimap {
+  background: theme('colors.gray.800/90');
+  border: 1px solid theme('colors.gray.700');
+  border-radius: theme('borderRadius.lg');
+  padding: theme('spacing.2');
+  backdrop-filter: blur(8px);
+  box-shadow: theme('boxShadow.lg');
+}
+
+.react-flow__handle {
+  width: 0.75rem !important;
+  height: 0.75rem !important;
+  background-color: theme('colors.gray.500');
+  transition: all 200ms ease-in-out;
+}
+
+.react-flow__handle:hover {
+  background-color: theme('colors.blue.500');
+  transform: scale(1.2);
+}
+
+.react-flow__handle-top {
+  top: -10px !important;
+}
+
+.react-flow__handle-bottom {
+  bottom: -10px !important;
+}
+
+.react-flow__node {
+  user-select: none;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Edge styles */
+.react-flow__edge-path {
+  stroke: theme('colors.gray.500');
+  stroke-width: 2;
+  transition: all 200ms ease-in-out;
+  stroke-dasharray: 0;
+  animation: flowEdgeAnimation 1s ease-in-out infinite;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: theme('colors.blue.500');
+  stroke-width: 3;
+  animation: flowEdgeHoverAnimation 1s ease-in-out infinite;
+}
+
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: theme('colors.blue.500');
+  stroke-width: 3;
+  animation: none;
+}
+
+@keyframes flowEdgeAnimation {
+  0% {
+    stroke-dasharray: 0;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 10;
+    stroke-dashoffset: -5;
+  }
+  100% {
+    stroke-dasharray: 0;
+    stroke-dashoffset: -10;
+  }
+}
+
+@keyframes flowEdgeHoverAnimation {
+  0% {
+    stroke-dasharray: 0;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 15;
+    stroke-dashoffset: -7.5;
+  }
+  100% {
+    stroke-dasharray: 0;
+    stroke-dashoffset: -15;
+  }
+}
