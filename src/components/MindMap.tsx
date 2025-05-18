@@ -38,8 +38,10 @@ export const MindMap: React.FC<{}> = () => {
       setNodes(updatedNodes as MindMapNode[]);
       
       // Update selected node when selection changes
-      const selectionChange = changes.find(change => change.type === 'select');
-      if (selectionChange) {
+      const selectionChange = changes.find(
+        (change) => change.type === 'select'
+      );
+      if (selectionChange && selectionChange.type === 'select') {
         setSelectedNode(selectionChange.selected ? selectionChange.id : null);
       }
     },
